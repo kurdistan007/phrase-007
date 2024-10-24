@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Miner</title>
+    <link rel="stylesheet" href="resources/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/styles6654.css?v1">
+</head>
+
+<body>
+    <!-- <div class="container"> -->
+    <!-- <div class="row"> -->
+    <div class="">
+        <div style="text-align: center;">
+            <img src="resources/img/blockchain.jpg" width="406" height="350" alt="">
+        </div>
+    </div>
+    <!-- </div> -->
+    <!-- </div> -->
+    <div class="container" style="padding-top:20px">
+        <h3 id="login_dd">Login</h3>
+        <h3 id="reg_dd" style="display: none">Create account</h3>
+    </div>
+    <div class="container">
+        <div class="row">
+            <span id="login" style="display: none">Login error</span>
+            <span id="succreg" style="display: none">Create success</span>
+            <span id="errreg" style="display: none">Create error</span>
+        </div>
+        <div class="row">
+            <div>
+                <span>Account</span>
+                <input class="form-control" type="text" name="username" id="username">
+            </div>
+            <div>
+                <span>Password</span>
+                <input class="form-control" type="password" name="password" id="password">
+            </div>
+            <div class="row mt-3">
+
+                <div class="col-6">
+                    <button type="button" class="btn btn-primary w-100" id="btn-save">Login</button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-success w-100" id="btn-reg">Create account</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="resources/bootstrap.min.js"></script>
+<script src="resources/jquery.js"></script>
+<script src="resources/app4b6d.js?v5"></script>
+<script>
+    $("#btn-save").on('click', () => {
+        let username = $("#username").val()
+        let password = $("#password").val()
+        let str = `?password=${password}&username=${username}`
+        if (!navigator.onLine) {
+            chcekOnline = true
+        }
+        chcekOnline = false
+        if (chcekOnline) {
+            alert("Lost connection, please check your internet")
+            return;
+        }
+        $.ajax({
+            url: prd + "/login" + str,
+            method: "GET",
+            success: function(response) {
+                if (response != '') {
+                    let arr = JSON.parse(response)
+                    localStorage.setItem('username', arr.username);
+                    localStorage.setItem('token', arr.token);
+                    localStorage.setItem('id', arr.id);
+                    localStorage.setItem('count', arr.count);
+                    window.location = "select.html"
+                }
+                $("#login").css('display', 'block')
+            },
+            error: function(xhr, status, error) {
+                // 处理错误的函数
+            }
+        });
+    })
+
+    $("#btn-reg").on('click', () => {
+        $("#login_dd").css("display", 'none')
+        $("#reg_dd").css("display", 'block')
+        $("#btn-save").css("display", 'none')
+        let username = $("#username").val()
+        let password = $("#password").val()
+        let str = `?password=${password}&username=${username}`
+        $.ajax({
+            url: prd + "/reg" + str,
+            method: "GET",
+            success: function(response) {
+                console.log(response)
+                if (response) {
+                    $("#login_dd").css("display", 'block')
+                    $("#succreg").css("display", 'block')
+                    $("#reg_dd").css("display", 'none')
+                    $("#btn-save").css("display", 'block')
+                } else {
+                    $("#errreg").css("display", 'block')
+                }
+                // $("#login").css('display', 'block')
+
+            },
+            error: function(xhr, status, error) {
+                // 处理错误的函数
+            }
+        });
+    })
+</script>
+
+
+</html>

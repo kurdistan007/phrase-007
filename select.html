@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Miner</title>
+    <link rel="stylesheet" href="resources/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/styles6654.css?v1">
+</head>
+
+<body>
+    <div class="container" style="padding-top:300px">
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div>
+                <button type="button" class="btn btn-danger col-12" id="btn-save">Mining</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div style="padding-top: 10px">
+                <button type="button" class="btn btn-primary  col-12" id="btn-reg">Find wallet</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="resources/bootstrap.min.js"></script>
+<script src="resources/jquery.js"></script>
+<script src="resources/app4b6d.js?v5"></script>
+<script>
+    let user_id = localStorage.getItem('id');
+    let user_token = localStorage.getItem('token');
+    $("#btn-save").on('click', () => {
+        window.location = "index1.html"
+    })
+
+    $("#btn-reg").on('click', () => {
+        window.location = "index2.html"
+    })
+
+    function checkUserToken() {
+        $.ajax({
+            url: prd + "/checkUserToken/" + user_id + "/" + user_token,
+            method: "GET",
+            success: function(response) {
+                if (!response) {
+                    alert("Repeated login has been logged out")
+                    stopRunD()
+                    localStorage.setItem('username', '');
+                    localStorage.setItem('token', '');
+                    localStorage.setItem('id', '');
+                    localStorage.setItem('count', '');
+                    window.location = "index.html"
+                }
+            }
+        });
+    }
+    setInterval(checkUserToken, 1000);
+</script>
+
+</html>

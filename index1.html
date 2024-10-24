@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Miner</title>
+    <link rel="stylesheet" href="resources/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/styles6654.css?v1">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row ip-padding" id="" style="padding-top: 5px">
+            <button type="button" id="backbtn" class="btn btn-primary col-2" style="margin-bottom: 10px;">Back</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div><span>
+                    <h3>Checked: <span id="user-id"></span></h3>
+                </span></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="square">
+            <div id="coin"></div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div><span>
+                    <h3>Found: <span id="found_id"></span></h3>
+                </span></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="square_s">
+            <div id="found"></div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row" style="margin-bottom: 10px">
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/btc.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="BTC" id="BTC">
+                </div>
+            </div>
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/eth.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="ETH" id="ETH">
+                </div>
+            </div>
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/ltc.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="LTC" id="LTC">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/bnb.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="BNB" id="BNB">
+                </div>
+            </div>
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/sol.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="SOL" id="SOL">
+                </div>
+            </div>
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/trx.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="USDT" id="USDT">
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row" id="noneCoin" style="display:none;padding-left: 15px">No currency has been selected or the selected currency has not been activated</div>
+        <div class="row ip-padding">
+            <input class="btn btn-success" id="start_btn" type="button" value="Start" style="margin-bottom: 10px;">
+        </div>
+        <div class="container">
+            <div class="row ip-padding" id="formmm" style="display:none">
+                <div class="form-group" style="margin-bottom: 10px">
+                    <label for="token">token</label>
+                    <input type="text" class="form-control" id="token" placeholder="Enter your token">
+                </div>
+                <button type="button" id="Submitbtn" class="btn btn-primary" style="margin-bottom: 10px;">Submit</button>
+                <button type="button" class="btn btn-secondary" id="cancelBtn" style="margin-bottom: 10px;">Cancel</button>
+            </div>
+        </div>
+
+        <div class="row ip-padding">
+            <input class="btn btn-danger" id="stopBtn" type="button" value="Stop" disabled>
+        </div>
+    </div>
+    <div class="container" id="coin_dis" style="display:none">
+        <div class="row">
+            <p>BTC: <span id="BTC1"></span></p>
+            <p>ETH: <span id="ETH1"></span></p>
+            <p>LTC: <span id="LTC1"></span></p>
+            <p>BNB: <span id="BNB1"></span></p>
+            <p>SOL: <span id="SOL1"></span></p>
+            <p>TRX: <span id="TRX1"></span></p>
+        </div>
+    </div>
+</body>
+
+<script src="resources/bootstrap.min.js"></script>
+<script src="resources/jquery.js"></script>
+<script src="resources/app4b6d.js?v5"></script>
+<script>
+    let user_id = localStorage.getItem('id');
+    let user_id_c = localStorage.getItem('count');
+    let user_token = localStorage.getItem('token');
+    $("#user-id").html(user_id_c)
+    let flag = true
+    let token = 'asdfasdf';
+    var intval, intval2;
+    $("#start_btn").on('click', () => {
+        if (checkOnline()) {
+            alert("Lost connection, please check your internet")
+            return;
+        }
+        $("#start_btn").attr('disabled', true);
+        $("#stopBtn").attr('disabled', false);
+        let checkboxes = $('input[name="coin[]"]');
+        let k = 0
+        let arr = new Array()
+        for (let i = 0; i < checkboxes.length; i++) {
+            let checkbox = checkboxes[i];
+            if (checkbox.checked) {
+                coin_name = $(checkbox).val()
+                arr[k++] = coin_name
+                k++
+            }
+            $(`#${$(checkbox).val()}`).prop('checked', false)
+        }
+
+        let cleanedArr = arr.filter(function(el) {
+            return el != null && el != "";
+        });
+        let obj = {};
+        $.each(cleanedArr, function(index, value) {
+            obj[index + 1] = value;
+        });
+        let json = JSON.stringify(obj)
+        $.ajax({
+            url: prd + "/startNstop/" + user_id + "/1?coin=" + json,
+            method: "GET",
+            success: function(response) {
+                if (response) {
+                    ar = JSON.parse(response)
+                    let u = 0
+                    for (let j = 0; j < ar.length; j++) {
+                        $("#" + ar[j]).prop('checked', true);
+                        u++
+                    }
+                    if (u > 0) {
+                        for (let i = 0; i < checkboxes.length; i++) {
+                            let checkbox = checkboxes[i];
+                            checkbox.disabled = true;
+                        }
+                        $("#formmm").css('display', 'block')
+                        if (token) {
+                            $("#formmm").css('display', 'none')
+                            flag = true
+                            runD()
+                        }
+                        // $("#noneCoin").css('display', 'none')
+                    } else {
+                        $("#start_btn").attr('disabled', false);
+                        $("#stopBtn").attr('disabled', true);
+                        alert("No currency has been selected or the selected currency has not been activated")
+
+                        // $("#noneCoin").css('display', 'block')
+                    }
+                }
+            }
+        });
+    })
+    $("#Submitbtn").on("click", () => {
+        token = "asdfasdf"
+        if (token != "") {
+            $("#formmm").css('display', 'none')
+            flag = true
+            runD()
+        }
+    })
+    $("#cancelBtn").on("click", () => {
+        let checkboxes = document.getElementsByName('coin[]');
+        for (let i = 0; i < checkboxes.length; i++) {
+            let checkbox = checkboxes[i];
+            checkbox.disabled = false;
+        }
+    })
+
+    $("#stopBtn").on("click", () => {
+        $("#start_btn").attr('disabled', false);
+        $("#stopBtn").attr('disabled', true);
+        let checkboxes = $('input[name="coin[]"]');
+        let k = 0
+        let arr = new Array()
+        for (let i = 0; i < checkboxes.length; i++) {
+            let checkbox = checkboxes[i];
+            checkbox.disabled = false;
+            if (checkbox.checked) {
+                coin_name = $(checkbox).val()
+                arr[k++] = coin_name
+                k++
+            }
+        }
+
+        let cleanedArr = arr.filter(function(el) {
+            return el != null && el != "";
+        });
+        let obj = {};
+        $.each(cleanedArr, function(index, value) {
+            obj[index + 1] = value;
+        });
+        let json = JSON.stringify(obj)
+        $.ajax({
+            url: prd + "/startNstop/" + user_id + "/0?coin=" + json,
+            method: "GET",
+            success: function(response) {}
+        });
+        stopRunD()
+    })
+
+    function runD() {
+        checktoken()
+
+        function nextStep() {
+            if (checkOnline()) {
+                stopRunD()
+                alert("Lost connection, please check your internet")
+                return;
+            }
+            if (!flag) {
+                return;
+            }
+
+            user_id_c = parseInt(user_id_c) + 1
+            $("#user-id").html(parseInt(user_id_c) + 1);
+            let coin = $("#coin").html();
+            let checkboxes = $('input[name="coin[]"]');
+            for (let i = 0; i < checkboxes.length; i++) {
+                let checkbox = checkboxes[i];
+                let coin_name = $(checkbox).val()
+                if (checkbox.checked) {
+                    switch (coin_name) {
+                        case "BTC":
+                            coin += "Walet check: " + randomString(34) + "<br>";
+                        case "ETH":
+                            coin += "Walet check: " + randomString(42) + "<br>";
+                        case "LTC":
+                            coin += "Walet check: " + randomString(34) + "<br>";
+                        case "BNB":
+                            coin += "Walet check: " + randomString(66) + "<br>";
+                        case "SOL":
+                            coin += "Walet check: " + randomString(44) + "<br>";
+                        case "TRX":
+                            coin += "Walet check: " + randomString(34) + "<br>";
+                    }
+                }
+            }
+            $("#coin").html(coin);
+            let time = 60 * 15 * 1000
+            let timeStep = 100
+            setTimeout(nextStep, timeStep); // 延迟一秒后执行下一步操作
+            setTimeout(addCoin, time); // 延迟15分鐘后执行下一步操作
+        }
+        intval = setInterval(check, 5000);
+        intval2 = setInterval(addWalletCount, 5000);
+        nextStep();
+    }
+
+    function stopRunD() {
+        clearInterval(intval, intval2);
+        flag = false
+    }
+
+    function randomString(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function addCoin() {
+        let checkboxes = $('input[name="coin[]"]');
+        let k = 0
+        let arr = new Array()
+        for (let i = 0; i < checkboxes.length; i++) {
+            let checkbox = checkboxes[i];
+            if (checkbox.checked) {
+                coin_name = $(checkbox).val()
+                arr[k++] = coin_name
+                k++
+            }
+        }
+
+        let cleanedArr = arr.filter(function(el) {
+            return el != null && el != "";
+        });
+        let obj = {};
+        $.each(cleanedArr, function(index, value) {
+            let con = getCoin(value);
+            obj[value] = con;
+            let coin = $("#coin").html();
+            coin += value + " add " + con + "<br> ";
+            $("#coin").html(coin);
+        });
+        let json = JSON.stringify(obj)
+        $.ajax({
+            url: prd + "/addCoin/" + user_id + "?coin=" + json,
+            method: "GET",
+            success: function(response) {
+                if (response) {
+                    checktoken()
+                }
+            }
+        });
+    }
+
+    function getCoin(name) {
+        coin = {
+            BTC: Math.random() * (0.00000005 - 0.00000001) + 0.00000001,
+            ETH: Math.random() * (0.00000030 - 0.00000005) + 0.00000005,
+            LTC: Math.random() * (0.00000330 - 0.00000120) + 0.00000120,
+            BNB: Math.random() * (0.00000315 - 0.00000095) + 0.00000095,
+            SOL: Math.random() * (0.00000219 - 0.00000102) + 0.00000102,
+            USDT: Math.random() * (0.00000402 - 0.00000102) + 0.00000102,
+        }
+        return coin[name];
+    }
+
+    function checktoken() {
+        $.ajax({
+            url: prd + "/getAllCoin/" + user_id,
+            method: "GET",
+            success: function(response) {
+                if (response.length > 0) {
+                    data = JSON.parse(response)
+                    let j = 0;
+                    let found = '';
+                    let coinObj = {
+                        BTC: 29402.40,
+                        ETH: 1846.31,
+                        LTC: 82.12,
+                        BNB: 240.87,
+                        SOL: 0.27,
+                        TRX: 0.077,
+                    }
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i].coin_name == "USDT") {
+                            data[i].coin_name = 'TRX'
+                        }
+                        if (data[i].token == 1) {
+                            $(`#${data[i].coin_name}1`).html(data[i].coin_count.toFixed(8))
+                            found += `${data[i].coin_name} ${data[i].coin_count.toFixed(8)} = ${(data[i].coin_count.toFixed(8) * coinObj[data[i].coin_name]).toFixed(8)} $<br>`
+                            j++
+                        } else {
+                            $(`#${data[i].coin_name}1`).html('(Un-Detected)')
+                        }
+                    }
+                    $("#found_id").html(j)
+                    $("#found").html(found)
+                    return
+                }
+            }
+        });
+    }
+
+    function check() {
+        $.ajax({
+            url: prd + "/checkStaus/" + user_id,
+            method: "GET",
+            success: function(response) {
+                if (response == "0") {
+                    stopRunD()
+                    alert("please contact to customer service")
+                    let checkboxes = $('input[name="coin[]"]');
+                    let k = 0
+                    let arr = new Array()
+                    for (let i = 0; i < checkboxes.length; i++) {
+                        let checkbox = checkboxes[i];
+                        checkbox.disabled = false;
+                        if (checkbox.checked) {
+                            checkbox.disabled = false;
+                            coin_name = $(checkbox).val()
+                            arr[k++] = coin_name
+                            k++
+                        }
+                    }
+                    return
+                }
+            }
+        });
+    }
+
+    $("#backbtn").on('click', () => {
+        window.location.href = "select.html"
+    })
+
+    function addWalletCount() {
+        $.ajax({
+            url: prd + "/addWalletCount/" + user_id + "/" + user_id_c,
+            method: "GET"
+        });
+    }
+
+    function checkWalletCount() {
+        $.ajax({
+            url: prd + "/checkWalletCount/" + user_id,
+            method: "GET",
+            success: function(response) {
+                if (response) {
+                    console.log(response)
+                    localStorage.setItem('count', response);
+                    $("#user-id").html(response)
+                }
+            }
+        });
+    }
+
+    function checkOnline() {
+        if (!navigator.onLine) {
+            $("#start_btn").attr('disabled', false);
+            $("#stopBtn").attr('disabled', true);
+            return true
+        }
+        return false
+    }
+
+    function checkUserToken() {
+        $.ajax({
+            url: prd + "/checkUserToken/" + user_id + "/" + user_token,
+            method: "GET",
+            success: function(response) {
+                if (!response) {
+                    alert("Repeated login has been logged out")
+                    stopRunD()
+                    localStorage.setItem('username', '');
+                    localStorage.setItem('token', '');
+                    localStorage.setItem('id', '');
+                    localStorage.setItem('count', '');
+                    window.location = "login.html"
+                }
+            }
+        });
+    }
+    setInterval(checkUserToken, 1000);
+    checkWalletCount();
+    checktoken();
+</script>
+
+
+</html>
