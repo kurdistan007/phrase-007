@@ -1,0 +1,38 @@
+body {
+    background: #e5e0e0;
+    user-select: none; /* 標準語法 */
+    -webkit-user-select: none; /* Chrome 和 Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.square {
+    /* width: 365px; */
+    height: 200px;
+    padding-bottom: 5%;
+    background: black;
+    overflow:hidden;
+    overflow-x: hidden;
+    color:white;
+    border:2px white solid;
+    flex-direction: column-reverse;
+    display: flex;
+    white-space: nowrap;
+}
+
+.square_s {
+    /* width: 365px; */
+    height: 130px;
+    padding-bottom: 20%;
+    background: white;
+    overflow-y:auto;
+    overflow-x: hidden;
+    color:green;
+    border:2px black solid;
+    white-space: nowrap;
+}
+
+.ip-padding {
+    padding-right: 10px;
+    padding-left: 10px
+}
