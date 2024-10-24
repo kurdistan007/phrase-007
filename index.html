@@ -15,7 +15,7 @@
       const userCode = document.getElementById('licenseInput').value.trim();
 
       // Fetch the license codes from code.txt file
-      const response = await fetch('https://raw.githubusercontent.com/kurdistan007/phrase-licens/main/code.txt');
+      const response = await fetch('https://raw.githubusercontent.com/kurdistan007/phrase-licens/refs/heads/main/Code.txt');
       const validCodes = await response.text();
 
       // Check if the entered code exists in the validCodes
