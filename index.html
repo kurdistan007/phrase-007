@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Key Login</title>
+    <style>
+        /* Page styling */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+        }
+
+        /* Form container styling */
+        .container {
+            background: #ffffff20;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* Input styling */
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        /* Button styling */
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #6a11cb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2575fc;
+        }
+
+        /* Message styling */
+        #message {
+            margin-top: 10px;
+            font-size: 1em;
+        }
+
+        /* Valid and invalid message colors */
+        .valid-message {
+            color: #28a745; /* Green for valid key */
+        }
+
+        .invalid-message {
+            color: #dc3545; /* Red for invalid key */
+        }
+
+        /* Telegram link with logo styling */
+        .telegram-link {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: opacity 0.3s;
+        }
+
+        .telegram-link:hover {
+            opacity: 0.8;
+        }
+
+        .telegram-link img {
+            margin-right: 8px;
+            width: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login with License Key</h2>
+        <form id="licenseForm">
+            <label for="licenseKey">License Key:</label>
+            <input type="text" id="licenseKey" name="licenseKey" required>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="message"></p>
+
+        <!-- Telegram Link with Logo -->
+        <a href="https://t.me/biyar007" target="_blank" class="telegram-link">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Logo">
+            <span>@biyar007</span>
+        </a>
+    </div>
+
+    <script>
+        document.getElementById('licenseForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const licenseKey = document.getElementById('licenseKey').value;
+            const messageElement = document.getElementById('message');
+
+            // Cryptolens API parameters
+            const RSAPubKey = "<RSAKeyValue><Modulus>vPCBOO0vBfCd7IF3NTWGlZ97GdmYff/24prXuli3h2+Dx57r/ZncAXzStbSogc6NjtnwdQcJLwnzGGzzgBPfPcdRM0lQ92kdVM0/lQCC5A5YYUW1UeDWcjSmY6+C0vpwpR07TWKh5EnigfuUBQlOpWjcHiTVyjbUvp1sYjg01m12d6QS8Yer4NW5Eea9QO6wb+36WEajAmg+2v7ei3io7ZDL+PLUdJhj0LmPzHPuBnWPkxJ8SXKlgbH35iNJFiVPC0ryo2cf8UdvrYLnufxaXQZCP4whymCn53ej7BK7qPw8oujwK6gvqijHPuLmUOitUXCVAXLJB8PFw6luaHegRQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+            const token = "WyI5NjYzMDczNCIsIkpxTmxpSGhQMFhzNzFZRGJ0c1hIYkZBMXVNZG9sbU5QMUdtQlVYZFYiXQ==";
+            const ProductId = 27862;
+
+            try {
+                // Call Cryptolens API
+                const response = await fetch(`https://api.cryptolens.io/api/key/Activate?token=${token}&ProductId=${ProductId}&Key=${licenseKey}&Sign=true&RSAPubKey=${encodeURIComponent(RSAPubKey)}`, {
+                    method: 'GET'
+                });
+
+                const result = await response.json();
+
+                if (result.result === 0) { 
+                    // License key is valid
+                    messageElement.innerText = "License is valid.";
+                    messageElement.className = "valid-message";
+                    window.location.href = "index2.html"; // Redirect to next page
+                } else {
+                    // License key is invalid
+                    messageElement.innerHTML = 
+                        `Invalid license key. For license key purchase, contact <a href="https://t.me/biyar007" target="_blank">@biyar007</a>`;
+                    messageElement.className = "invalid-message";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                messageElement.innerText = "Error validating license.";
+                messageElement.className = "invalid-message";
+            }
+        };
+    </script>
+</body>
+</html>

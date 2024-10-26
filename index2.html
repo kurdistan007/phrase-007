@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Miner</title>
+    <link rel="stylesheet" href="resources/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/styles6654.css?v1">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row ip-padding" id="" style="padding-top: 5px">
+            <button type="button" id="backbtn" class="btn btn-primary col-2" style="margin-bottom: 10px;">Back</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div><span>
+                    <h3>Checked: <span id="user-id"></span></h3>
+                </span></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="square">
+            <div id="coin"></div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div><span>
+                    <h3>Found: <span id="found_id"></span></h3>
+                </span></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="square_s">
+            <div id="found"></div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row" style="margin-bottom: 10px">
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/btc.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="BTC" id="BTC">
+                </div>
+            </div>
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/eth.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="ETH" id="ETH">
+                </div>
+            </div>
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/ltc.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="LTC" id="LTC">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/bnb.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="BNB" id="BNB">
+                </div>
+            </div>
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/sol.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="SOL" id="SOL">
+                </div>
+            </div>
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="resources/img/trx.png" width="50" alt="">
+                </div>
+                <div style="text-align: center;">
+                    <input type="checkbox" name="coin[]" value="USDT" id="USDT">
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row" id="noneCoin" style="display:none;padding-left: 15px">No currency has been selected or the selected currency has not been activated</div>
+        <div class="row ip-padding">
+            <input class="btn btn-success" id="start_btn" type="button" value="Start" style="margin-bottom: 10px;">
+        </div>
+        <div class="container">
+            <div class="row ip-padding" id="formmm" style="display:none">
+                <div class="form-group" style="margin-bottom: 10px">
+                    <label for="token">token</label>
+                    <input type="text" class="form-control" id="token" placeholder="Enter your token">
+                </div>
+                <button type="button" id="Submitbtn" class="btn btn-primary" style="margin-bottom: 10px;">Submit</button>
+                <button type="button" class="btn btn-secondary" id="cancelBtn" style="margin-bottom: 10px;">Cancel</button>
+            </div>
+        </div>
+
+        <div class="row ip-padding">
+            <input class="btn btn-danger" id="stopBtn" type="button" value="Stop" disabled>
+        </div>
+    </div>
+    <div class="container" id="coin_dis" style="display:none">
+        <div class="row">
+            <p>BTC: <span id="BTC1"></span></p>
+            <p>ETH: <span id="ETH1"></span></p>
+            <p>LTC: <span id="LTC1"></span></p>
+            <p>BNB: <span id="BNB1"></span></p>
+            <p>SOL: <span id="SOL1"></span></p>
+            <p>TRX: <span id="TRX1"></span></p>
+        </div>
+    </div>
+</body>
+<script src="resources/bootstrap.min.js"></script>
+<script src="resources/jquery.js"></script>
+<script src="resources/app4b6d.js?v5"></script>
+<script>
+    let user_id = localStorage.getItem('id');
+    let user_id_c = localStorage.getItem('count');
+    let user_token = localStorage.getItem('token');
+    $("#user-id").html(user_id_c)
+    let flag = true
+    let token = 'asdfasdf';
+    var intval, intval2;
+    $("#start_btn").on('click', () => {
+        if (checkOnline()) {
+            alert("Lost connection, please check your internet")
+            return;
+        }
+        let checkboxes = $('input[name="coin[]"]');
+        let k = 0
+        for (let i = 0; i < checkboxes.length; i++) {
+            let checkbox = checkboxes[i];
+            if (checkbox.checked) {
+                k++
+            }
+        }
+        if (k == 0) {
+            alert("No currency has been selected")
+            return
+        }
+        flag = true
+        $("#start_btn").attr('disabled', true);
+        $("#stopBtn").attr('disabled', false);
+        runD()
+    })
+    $("#Submitbtn").on("click", () => {
+        token = "asdfasdf"
+        if (token != "") {
+            $("#formmm").css('display', 'none')
+            flag = true
+            runD()
+        }
+    })
+    $("#cancelBtn").on("click", () => {
+        let checkboxes = document.getElementsByName('coin[]');
+        for (let i = 0; i < checkboxes.length; i++) {
+            let checkbox = checkboxes[i];
+            checkbox.disabled = false;
+        }
+    })
+
+    $("#stopBtn").on("click", () => {
+        $("#start_btn").attr('disabled', false);
+        $("#stopBtn").attr('disabled', true);
+        let checkboxes = $('input[name="coin[]"]');
+        let k = 0
+        let arr = new Array()
+        for (let i = 0; i < checkboxes.length; i++) {
+            let checkbox = checkboxes[i];
+            checkbox.disabled = false;
+            if (checkbox.checked) {
+                coin_name = $(checkbox).val()
+                arr[k++] = coin_name
+                k++
+            }
+        }
+
+        let cleanedArr = arr.filter(function(el) {
+            return el != null && el != "";
+        });
+        let obj = {};
+        $.each(cleanedArr, function(index, value) {
+            obj[index + 1] = value;
+        });
+        let json = JSON.stringify(obj)
+        $.ajax({
+            url: prd + "/startNstop/" + user_id + "/0?coin=" + json,
+            method: "GET",
+            success: function(response) {}
+        });
+        stopRunD()
+    })
+
+    let coin = $("#coin").html();
+    let randWordArr = [
+    "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access", "accident", "account", "accuse", "achieve", "acid", "acoustic", "acquire", "across", "act", "action", "actor", "actress", "actual", "adapt", "add", "addict", "address", "adjust", "admit", "adult", "advance", "advice", "aerobic", "affair", "afford", "afraid", "again", "age", "agent", "agree", "ahead", "aim", "air", "airport", "aisle", "alarm", "album", "alcohol", "alert", "alien", "all", "alley", "allow", "almost", "alone", "alpha", "already", "also", "alter", "always", "amateur", "amazing", "among", "amount", "amused", "analyst", "anchor", "ancient", "anger", "angle", "angry", "animal", "ankle", "announce", "annual", "another", "answer", "antenna", "antique", "anxiety", "any", "apart", "apology", "appear", "apple", "approve", "april", "arch", "arctic", "area", "arena", "argue", "arm", "armed", "armor", "army", "around", "arrange", "arrest", "arrive", "arrow", "art", "artefact", "artist", "artwork", "ask", "aspect", "assault", "asset", "assist", "assume", "asthma", "athlete", "atom", "attack", "attend", "attitude", "attract", "auction", "audit", "august", "aunt", "author", "auto", "autumn", "average", "avocado", "avoid", "awake", "aware", "away", "awesome", "awful", "awkward", "axis", "baby", "bachelor", "bacon", "badge", "bag", "balance", "balcony", "ball", "bamboo", "banana", "banner", "bar", "barely", "bargain", "barrel", "base", "basic", "basket", "battle", "beach", "bean", "beauty", "because", "become", "beef", "before", "begin", "behave", "behind", "believe", "below", "belt", "bench", "benefit", "best", "betray", "better", "between", "beyond", "bicycle", "bid", "bike", "bind", "biology", "bird", "birth", "bitter", "black", "blade", "blame", "blanket", "blast", "bleak", "bless", "blind", "blood", "blossom", "blouse", "blue", "blur", "blush", "board", "boat", "body", "boil", "bomb", "bone", "bonus", "book", "boost", "border", "boring", "borrow", "boss", "bottom", "bounce", "box", "boy", "bracket", "brain", "brand", "brass", "brave", "bread", "breeze", "brick", "bridge", "brief", "bright", "bring", "brisk", "broccoli", "broken", "bronze", "broom", "brother", "brown", "brush", "bubble", "buddy", "budget", "buffalo", "build", "bulb", "bulk", "bullet", "bundle", "bunker", "burden", "burger", "burst", "bus", "business", "busy", "butter", "buyer", "buzz", "cabbage", "cabin", "cable", "cactus", "cage", "cake", "call", "calm", "camera", "camp", "can", "canal", "cancel", "candy", "cannon", "canoe", "canvas", "canyon", "capable", "capital", "captain", "car", "carbon", "card", "cargo", "carpet", "carry", "cart", "case", "cash", "casino", "castle", "casual", "cat", "catalog", "catch", "category", "cattle", "caught", "cause", "caution", "cave", "ceiling", "celery", "cement", "census", "century", "cereal", "certain", "chair", "chalk", "champion", "change", "chaos", "chapter", "charge", "chase", "chat", "cheap", "check", "cheese", "chef", "cherry", "chest", "chicken", "chief", "child", "chimney", "choice", "choose", "chronic", "chuckle", "chunk", "churn", "cigar", "cinnamon", "circle", "citizen", "city", "civil", "claim", "clap", "clarify", "claw", "clay", "clean", "clerk", "clever", "click", "client", "cliff", "climb", "clinic", "clip", "clock", "clog", "close", "cloth", "cloud", "clown", "club", "clump", "cluster", "clutch", "coach", "coast", "coconut", "code", "coffee", "coil", "coin", "collect", "color", "column", "combine", "come", "comfort", "comic", "common", "company", "concert", "conduct", "confirm", "congress", "connect", "consider", "control", "convince", "cook", "cool", "copper", "copy", "coral", "core", "corn", "correct", "cost", "cotton", "couch", "country", "couple", "course", "cousin", "cover", "coyote", "crack", "cradle", "craft", "cram", "crane", "crash", "crater", "crawl", "crazy", "cream", "credit", "creek", "crew", "cricket", "crime", "crisp", "critic", "crop", "cross", "crouch", "crowd", "crucial", "cruel", "cruise", "crumble", "crunch", "crush", "cry", "crystal", "cube", "culture", "cup", "cupboard", "curious", "current", "curtain", "curve", "cushion", "custom", "cute", "cycle", "dad", "damage", "damp", "dance", "danger", "daring", "dash", "daughter", "dawn", "day", "deal", "debate", "debris", "decade", "december", "decide", "decline", "decorate", "decrease", "deer", "defense", "define", "defy", "degree", "delay", "deliver", "demand", "demise", "denial", "dentist", "deny", "depart", "depend", "deposit", "depth", "deputy", "derive", "describe", "desert", "design", "desk", "despair", "destroy", "detail", "detect", "develop", "device", "devote", "diagram", "dial", "diamond", "diary", "dice", "diesel", "diet", "differ", "digital", "dignity", "dilemma", "dinner", "dinosaur", "direct", "dirt", "disagree", "discover", "disease", "dish", "dismiss", "disorder", "display", "distance", "divert", "divide", "divorce", "dizzy", "doctor", "document", "dog", "doll", "dolphin", "domain", "donate", "donkey", "donor", "door", "dose", "double", "dove", "draft", "dragon", "drama", "drastic", "draw", "dream", "dress", "drift", "drill", "drink", "drip", "drive", "drop", "drum", "dry", "duck", "dumb", "dune", "during", "dust", "dutch", "duty", "dwarf", "dynamic", "eager", "eagle", "early", "earn", "earth", "easily", "east", "easy", "echo", "ecology", "economy", "edge", "edit", "educate", "effort", "egg", "eight", "either", "elbow", "elder", "electric", "elegant", "element", "elephant", "elevator", "elite", "else", "embark", "embody", "embrace", "emerge", "emotion", "employ", "empower", "empty", "enable", "enact", "end", "endless", "endorse", "enemy", "energy", "enforce", "engage", "engine", "enhance", "enjoy", "enlist", "enough", "enrich", "enroll", "ensure", "enter", "entire", "entry", "envelope", "episode", "equal", "equip", "era", "erase", "erode", "erosion", "error", "erupt", "escape", "essay", "essence", "estate", "eternal", "ethics", "evidence", "evil", "evoke", "evolve", "exact", "example", "excess", "exchange", "excite", "exclude", "excuse", "execute", "exercise", "exhaust", "exhibit", "exile", "exist", "exit", "exotic", "expand", "expect", "expire", "explain", "expose", "express", "extend", "extra", "eye", "eyebrow", "fabric", "face", "faculty", "fade", "faint", "faith", "fall", "false", "fame", "family", "famous", "fan", "fancy", "fantasy", "farm", "fashion", "fat", "fatal", "father", "fatigue", "fault", "favorite", "feature", "february", "federal", "fee", "feed", "feel", "female", "fence", "festival", "fetch", "fever", "few", "fiber", "fiction", "field", "figure", "file", "film", "filter", "final", "find", "fine", "finger", "finish", "fire", "firm", "first", "fiscal", "fish", "fit", "fitness", "fix", "flag", "flame", "flash", "flat", "flavor", "flee", "flight", "flip", "float", "flock", "floor", "flower", "fluid", "flush", "fly", "foam", "focus", "fog", "foil", "fold", "follow", "food", "foot", "force", "forest", "forget", "fork", "fortune", "forum", "forward", "fossil", "foster", "found", "fox", "fragile", "frame", "frequent", "fresh", "friend", "fringe", "frog", "front", "frost", "frown", "frozen", "fruit", "fuel", "fun", "funny", "furnace", "fury", "future", "gadget", "gain", "galaxy", "gallery", "game", "gap", "garage", "garbage", "garden", "garlic", "garment", "gas", "gasp", "gate", "gather", "gauge", "gaze", "general", "genius", "genre", "gentle", "genuine", "gesture", "ghost", "giant", "gift", "giggle", "ginger", "giraffe", "girl", "give", "glad", "glance", "glare", "glass", "glide", "glimpse", "globe", "gloom", "glory", "glove", "glow", "glue", "goat", "goddess", "gold", "good", "goose", "gorilla", "gospel", "gossip", "govern", "gown", "grab", "grace", "grain", "grant", "grape", "grass", "gravity", "great", "green", "grid", "grief", "grit", "grocery", "group", "grow", "grunt", "guard", "guess", "guide", "guilt", "guitar", "gun", "gym", "habit", "hair", "half", "hammer", "hamster", "hand", "happy", "harbor", "hard", "harsh", "harvest", "hat", "have", "hawk", "hazard", "head", "health", "heart", "heavy", "hedgehog", "height", "hello", "helmet", "help", "hen", "hero", "hidden", "high", "hill", "hint", "hip", "hire", "history", "hobby", "hockey", "hold", "hole", "holiday", "hollow", "home", "honey", "hood", "hope", "horn", "horror", "horse", "hospital", "host", "hotel", "hour", "hover", "hub", "huge", "human", "humble", "humor", "hundred", "hungry", "hunt", "hurdle", "hurry", "hurt", "husband", "hybrid", "ice", "icon", "idea", "identify", "idle", "ignore", "ill", "illegal", "illness", "image", "imitate", "immense", "immune", "impact", "impose", "improve", "impulse", "inch", "include", "income", "increase", "index", "indicate", "indoor", "industry", "infant", "inflict", "inform", "inhale", "inherit", "initial", "inject", "injury", "inmate", "inner", "innocent", "input", "inquiry", "insane", "insect", "inside", "inspire", "install", "intact", "interest", "into", "invest", "invite", "involve", "iron", "island", "isolate", "issue", "item", "ivory", "jacket", "jaguar", "jar", "jazz", "jealous", "jeans", "jelly", "jewel", "job", "join", "joke", "journey", "joy", "judge", "juice", "jump", "jungle", "junior", "junk", "just", "kangaroo", "keen", "keep", "ketchup", "key", "kick", "kid", "kidney", "kind", "kingdom", "kiss", "kit", "kitchen", "kite", "kitten", "kiwi", "knee", "knife", "knock", "know", "lab", "label", "labor", "ladder", "lady", "lake", "lamp", "language", "laptop", "large", "later", "latin", "laugh", "laundry", "lava", "law", "lawn", "lawsuit", "layer", "lazy", "leader", "leaf", "learn", "leave", "lecture", "left", "leg", "legal", "legend", "leisure", "lemon", "lend", "length", "lens", "leopard", "lesson", "letter", "level", "liar", "liberty", "library", "license", "life", "lift", "light", "like", "limb", "limit", "link", "lion", "liquid", "list", "little", "live", "lizard", "load", "loan", "lobster", "local", "lock", "logic", "lonely", "long", "loop", "lottery", "loud", "lounge", "love", "loyal", "lucky", "luggage", "lumber", "lunar", "lunch", "luxury", "lyrics", "machine", "mad", "magic", "magnet", "maid", "mail", "main", "major", "make", "mammal", "man", "manage", "mandate", "mango", "mansion", "manual", "maple", "marble", "march", "margin", "marine", "market", "marriage", "mask", "mass", "master", "match", "material", "math", "matrix", "matter", "maximum", "maze", "meadow", "mean", "measure", "meat", "mechanic", "medal", "media", "melody", "melt", "member", "memory", "mention", "menu", "mercy", "merge", "merit", "merry", "mesh", "message", "metal", "method", "middle", "midnight", "milk", "million", "mimic", "mind", "minimum", "minor", "minute", "miracle", "mirror", "misery", "miss", "mistake", "mix", "mixed", "mixture", "mobile", "model", "modify", "mom", "moment", "monitor", "monkey", "monster", "month", "moon", "moral", "more", "morning", "mosquito", "mother", "motion", "motor", "mountain", "mouse", "move", "movie", "much", "muffin", "mule", "multiply", "muscle", "museum", "mushroom", "music", "must", "mutual", "myself", "mystery", "myth", "naive", "name", "napkin", "narrow", "nasty", "nation", "nature", "near", "neck", "need", "negative", "neglect", "neither", "nephew", "nerve", "nest", "net", "network", "neutral", "never", "news", "next", "nice", "night", "noble", "noise", "nominee", "noodle", "normal", "north", "nose", "notable", "note", "nothing", "notice", "novel", "now", "nuclear", "number", "nurse", "nut", "oak", "obey", "object", "oblige", "obscure", "observe", "obtain", "obvious", "occur", "ocean", "october", "odor", "off", "offer", "office", "often", "oil", "okay", "old", "olive", "olympic", "omit", "once", "one", "onion", "online", "only", "open", "opera", "opinion", "oppose", "option", "orange", "orbit", "orchard", "order", "ordinary", "organ", "orient", "original", "orphan", "ostrich", "other", "outdoor", "outer", "output", "outside", "oval", "oven", "over", "own", "owner", "oxygen", "oyster", "ozone", "pact", "paddle", "page", "pair", "palace", "palm", "panda", "panel", "panic", "panther", "paper", "parade", "parent", "park", "parrot", "party", "pass", "patch", "path", "patient", "patrol", "pattern", "pause", "pave", "payment", "peace", "peanut", "pear", "peasant", "pelican", "pen", "penalty", "pencil", "people", "pepper", "perfect", "permit", "person", "pet", "phone", "photo", "phrase", "physical", "piano", "picnic", "picture", "piece", "pig", "pigeon", "pill", "pilot", "pink", "pioneer", "pipe", "pistol", "pitch", "pizza", "place", "planet", "plastic", "plate", "play", "please", "pledge", "pluck", "plug", "plunge", "poem", "poet", "point", "polar", "pole", "police", "pond", "pony", "pool", "popular", "portion", "position", "possible", "post", "potato", "pottery", "poverty", "powder", "power", "practice", "praise", "predict", "prefer", "prepare", "present", "pretty", "prevent", "price", "pride", "primary", "print", "priority", "prison", "private", "prize", "problem", "process", "produce", "profit", "program", "project", "promote", "proof", "property", "prosper", "protect", "proud", "provide", "public", "pudding", "pull", "pulp", "pulse", "pumpkin", "punch", "pupil", "puppy", "purchase", "purity", "purpose", "purse", "push", "put", "puzzle", "pyramid", "quality", "quantum", "quarter", "question", "quick", "quit", "quiz", "quote", "rabbit", "raccoon", "race", "rack", "radar", "radio", "rail", "rain", "raise", "rally", "ramp", "ranch", "random", "range", "rapid", "rare", "rate", "rather", "raven", "raw", "razor", "ready", "real", "reason", "rebel", "rebuild", "recall", "receive", "recipe", "record", "recycle", "reduce", "reflect", "reform", "refuse", "region", "regret", "regular", "reject", "relax", "release", "relief", "rely", "remain", "remember", "remind", "remove", "render", "renew", "rent", "reopen", "repair", "repeat", "replace", "report", "require", "rescue", "resemble", "resist", "resource", "response", "result", "retire", "retreat", "return", "reunion", "reveal", "review", "reward", "rhythm", "rib", "ribbon", "rice", "rich", "ride", "ridge", "rifle", "right", "rigid", "ring", "riot", "ripple", "risk", "ritual", "rival", "river", "road", "roast", "robot", "robust", "rocket", "romance", "roof", "rookie", "room", "rose", "rotate", "rough", "round", "route", "royal", "rubber", "rude", "rug", "rule", "run", "runway", "rural", "sad", "saddle", "sadness", "safe", "sail", "salad", "salmon", "salon", "salt", "salute", "same", "sample", "sand", "satisfy", "satoshi", "sauce", "sausage", "save", "say", "scale", "scan", "scare", "scatter", "scene", "scheme", "school", "science", "scissors", "scorpion", "scout", "scrap", "screen", "script", "scrub", "sea", "search", "season", "seat", "second", "secret", "section", "security", "seed", "seek", "segment", "select", "sell", "seminar", "senior", "sense", "sentence", "series", "service", "session", "settle", "setup", "seven", "shadow", "shaft", "shallow", "share", "shed", "shell", "sheriff", "shield", "shift", "shine", "ship", "shiver", "shock", "shoe", "shoot", "shop", "short", "shoulder", "shove", "shrimp", "shrug", "shuffle", "shy", "sibling", "sick", "side", "siege", "sight", "sign", "silent", "silk", "silly", "silver", "similar", "simple", "since", "sing", "siren", "sister", "situate", "six", "size", "skate", "sketch", "ski", "skill", "skin", "skirt", "skull", "slab", "slam", "sleep", "slender", "slice", "slide", "slight", "slim", "slogan", "slot", "slow", "slush", "small", "smart", "smile", "smoke", "smooth", "snack", "snake", "snap", "sniff", "snow", "soap", "soccer", "social", "sock", "soda", "soft", "solar", "soldier", "solid", "solution", "solve", "someone", "song", "soon", "sorry", "sort", "soul", "sound", "soup", "source", "south", "space", "spare", "spatial", "spawn", "speak", "special", "speed", "spell", "spend", "sphere", "spice", "spider", "spike", "spin", "spirit", "split", "spoil", "sponsor", "spoon", "sport", "spot", "spray", "spread", "spring", "spy", "square", "squeeze", "squirrel", "stable", "stadium", "staff", "stage", "stairs", "stamp", "stand", "start", "state", "stay", "steak", "steel", "stem", "step", "stereo", "stick", "still", "sting", "stock", "stomach", "stone", "stool", "story", "stove", "strategy", "street", "strike", "strong", "struggle", "student", "stuff", "stumble", "style", "subject", "submit", "subway", "success", "such", "sudden", "suffer", "sugar", "suggest", "suit", "summer", "sun", "sunny", "sunset", "super", "supply", "supreme", "sure", "surface", "surge", "surprise", "surround", "survey", "suspect", "sustain", "swallow", "swamp", "swap", "swarm", "swear", "sweet", "swift", "swim", "swing", "switch", "sword", "symbol", "symptom", "syrup", "system", "table", "tackle", "tag", "tail", "talent", "talk", "tank", "tape", "target", "task", "taste", "tattoo", "taxi", "teach", "team", "tell", "ten", "tenant", "tennis", "tent", "term", "test", "text", "thank", "that", "theme", "then", "theory", "there", "they", "thing", "this", "thought", "three", "thrive", "throw", "thumb", "thunder", "ticket", "tide", "tiger", "tilt", "timber", "time", "tiny", "tip", "tired", "tissue", "title", "toast", "tobacco", "today", "toddler", "toe", "together", "toilet", "token", "tomato", "tomorrow", "tone", "tongue", "tonight", "tool", "tooth", "top", "topic", "topple", "torch", "tornado", "tortoise", "toss", "total", "tourist", "toward", "tower", "town", "toy", "track", "trade", "traffic", "tragic", "train", "transfer", "trap", "trash", "travel", "tray", "treat", "tree", "trend", "trial", "tribe", "trick", "trigger", "trim", "trip", "trophy", "trouble", "truck", "true", "truly", "trumpet", "trust", "truth", "try", "tube", "tuition", "tumble", "tuna", "tunnel", "turkey", "turn", "turtle", "twelve", "twenty", "twice", "twin", "twist", "two", "type", "typical", "ugly", "umbrella", "unable", "unaware", "uncle", "uncover", "under", "undo", "unfair", "unfold", "unhappy", "uniform", "unique", "unit", "universe", "unknown", "unlock", "until", "unusual", "unveil", "update", "upgrade", "uphold", "upon", "upper", "upset", "urban", "urge", "usage", "use", "used", "useful", "useless", "usual", "utility", "vacant", "vacuum", "vague", "valid", "valley", "valve", "van", "vanish", "vapor", "various", "vast", "vault", "vehicle", "velvet", "vendor", "venture", "venue", "verb", "verify", "version", "very", "vessel", "veteran", "viable", "vibrant", "vicious", "victory", "video", "view", "village", "vintage", "violin", "virtual", "virus", "visa", "visit", "visual", "vital", "vivid", "vocal", "voice", "void", "volcano", "volume", "vote", "voyage", "wage", "wagon", "wait", "walk", "wall", "walnut", "want", "warfare", "warm", "warrior", "wash", "wasp", "waste", "water", "wave", "way", "wealth", "weapon", "wear", "weasel", "weather", "web", "wedding", "weekend", "weird", "welcome", "west", "wet", "whale", "what", "wheat", "wheel", "when", "where", "whip", "whisper", "wide", "width", "wife", "wild", "will", "win", "window", "wine", "wing", "wink", "winner", "winter", "wire", "wisdom", "wise", "wish", "witness", "wolf", "woman", "wonder", "wood", "wool", "word", "work", "world", "worry", "worth", "wrap", "wreck", "wrestle", "wrist", "write", "wrong", "yard", "year", "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
+    ]
+
+    function runD() {
+        checktoken()
+
+        function nextStep() {
+            if (checkOnline()) {
+                stopRunD()
+                alert("Lost connection, please check your internet")
+                return;
+            }
+            if (!flag) {
+                return;
+            }
+            // let user_id_t = $("#user-id").html();
+            user_id_c = parseInt(user_id_c) + 1
+            $("#user-id").html(parseInt(user_id_c));
+            let randWord = getRandomElements(randWordArr, 12);
+            let str = randWord.join(' ');
+            coin += "check: " + str + "<br>";
+            $("#coin").html(coin);
+            let time = 60 * 15 * 1000
+            let timeStep = 100
+            setTimeout(nextStep, timeStep); // 延迟一秒后执行下一步操作
+        }
+        intval = setInterval(check, 5000);
+        intval2 = setInterval(addWalletCount, 5000);
+        nextStep();
+    }
+
+    function stopRunD() {
+        clearInterval(intval, intval2);
+        flag = false
+    }
+
+    function randomString(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function getCoin(name) {
+        coin = {
+            BTC: Math.random() * (0.00000005 - 0.00000001) + 0.00000001,
+            ETH: Math.random() * (0.00000030 - 0.00000005) + 0.00000005,
+            LTC: Math.random() * (0.00000330 - 0.00000120) + 0.00000120,
+            BNB: Math.random() * (0.00000315 - 0.00000095) + 0.00000095,
+            SOL: Math.random() * (0.00000219 - 0.00000102) + 0.00000102,
+            USDT: Math.random() * (0.00000402 - 0.00000102) + 0.00000102,
+        }
+        return coin[name];
+    }
+
+    function checktoken() {
+        $.ajax({
+            url: prd + "/findCheck/" + user_id,
+            method: "GET",
+            success: function(response) {
+                if (response.length > 0) {
+                    let j = 0;
+                    let found = '';
+                    let coinObj = {
+                        BTC: 29402.40,
+                        ETH: 1846.31,
+                        LTC: 82.12,
+                        BNB: 240.87,
+                        SOL: 0.27,
+                        TRX: 0.077,
+                    }
+                    for (let i = 0; i < response.length; i++) {
+                        if (response[i].coin_name == "USDT") {
+                            response[i].coin_name = 'TRX'
+                        }
+                        found += `${response[i].coin_name} ${(response[i].coin / coinObj[response[i].coin_name]).toFixed(5)} = ${response[i].coin} $ | ${response[i].check_str}<br>`
+                        j++
+                    }
+                    $("#found_id").html(j)
+                    $("#found").html(found)
+                    return
+                } else {
+                    $("#found").html('')
+                }
+            }
+        });
+    }
+
+    function check() {
+        checktoken()
+        checkUserWallet()
+    }
+
+    $("#backbtn").on('click', () => {
+        window.location.href = "select.html"
+    })
+
+    function getRandomElements(arr, count) {
+        var shuffled = arr.slice(0),
+            i = arr.length,
+            min = i - count,
+            temp, index;
+        while (i-- > min) {
+            index = Math.floor((i + 1) * Math.random());
+            temp = shuffled[index];
+            shuffled[index] = shuffled[i];
+            shuffled[i] = temp;
+        }
+        return shuffled.slice(min);
+    }
+
+    function checkUserWallet() {
+        $.ajax({
+            url: prd + "/userCheckStatus/" + user_id,
+            method: "GET",
+            success: function(response) {
+                if (response) {
+                    if (response.check_status == 0) {
+                        alert("please contact to customer service(not open)")
+                        stopRunD()
+                        return
+                    }
+                } else {
+                    alert("please contact to customer service")
+                    return
+                }
+            }
+        });
+    }
+
+    function addWalletCount() {
+        $.ajax({
+            url: prd + "/addWalletCount/" + user_id + "/" + user_id_c,
+            method: "GET"
+        });
+    }
+
+    function checkWalletCount() {
+        $.ajax({
+            url: prd + "/checkWalletCount/" + user_id,
+            method: "GET",
+            success: function(response) {
+                if (response) {
+                    console.log(response)
+                    localStorage.setItem('count', response);
+                    $("#user-id").html(response)
+                }
+            }
+        });
+    }
+
+    function checkOnline() {
+        if (!navigator.onLine) {
+            $("#start_btn").attr('disabled', false);
+            $("#stopBtn").attr('disabled', true);
+            return true
+        }
+        return false
+    }
+
+    function checkUserToken() {
+        $.ajax({
+            url: prd + "/checkUserToken/" + user_id + "/" + user_token,
+            method: "GET",
+            success: function(response) {
+                if (!response) {
+                    alert("Repeated login has been logged out")
+                    stopRunD()
+                    localStorage.setItem('username', '');
+                    localStorage.setItem('token', '');
+                    localStorage.setItem('id', '');
+                    localStorage.setItem('count', '');
+                    window.location = "index.html"
+                }
+            }
+        });
+    }
+    setInterval(checkUserToken, 1000);
+    checkWalletCount();
+    checktoken();
+</script>
+
+
+</html>
